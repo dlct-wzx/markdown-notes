@@ -1,3 +1,56 @@
+[TOC]
+
+### Shell元字符
+
+| 字符      | 作用                                      |
+| --------- | ----------------------------------------- |
+| *         | 匹配0或多个字符                           |
+| ?         | 匹配1个字符                               |
+| [...]     | 匹配指定集合中的一个字母                  |
+| #         | 脚本注释                                  |
+| $         | 变量引用                                  |
+| `` 或 $() | 命令替换                                  |
+| ""        | 字符串节点夫，允许进行变量和命令替换      |
+| ''        | 字符串节点夫，不允许进行变量和命令替换    |
+| &         | 后台执行： 命令 &                         |
+| ()        | 成组命令，括号中的命令将在子shell中执行   |
+| {}        | 成组命令，括号中的命令将在当前shell中执行 |
+| \         | 转义符                                    |
+
+### Bash shell环境配置文件
+
+**全局配置文件**
+
+- /etc/profile
+
+  交互式登录的shell 提供配置，用于定义环境变量或运行命令和脚本
+
+- /etc/bashrc
+
+  非交互式和交互式登录的shell 提供配置，用于定义命令别名和函数或定义本地变量
+
+**用户配置文件**
+
+- ~/.bash_profile
+
+  同全局
+
+- ~/.profile
+
+  同全局，只在登录时运行一次
+
+- ~/.bashrc
+
+  同全局
+
+- ~/.bash_login
+
+  登录时运行的脚本
+
+- ~/.bash_logout
+
+  退出时运行的脚本
+
 ### HelloWorld
 
 ```bash
@@ -90,11 +143,51 @@ echo $name  # 输出空行
 
 自定义变量改为环境变量
 
-![image-20220122011112724](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220122011112724.png)
+![image-20220122011112724](https://img-blog.csdnimg.cn/img_convert/3d34c81eba580bdd4b86483fe39f4b1d.png)
 
 环境变量改为自定义变量
 
-![image-20220122011315350](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220122011315350.png)
+![image-20220122011315350](https://img-blog.csdnimg.cn/img_convert/31b494eedcd41136523c848bfa5b5732.png)
+
+#### 变量声明
+
+```shell
+declare  [选项] 变量名
+-a		声明变量为数组
+-i		声明为整型
+-x		声明为环境变量
+-r		声明为只读变量
+```
+
+
+
+#### 变量替换
+
+| **操作符**  | **描述**                                                 |
+| ----------- | -------------------------------------------------------- |
+| ${var}      | 返回var的值，若没初始化则返回空                          |
+| ${var:-str} | 若var存在且不为空则返回var的值，否则返回str              |
+| ${var:=str} | 若var存在且不为空则返回var的值，否则将str赋给var然后返回 |
+| ${var:?str} | 若var存在且不为空则返回var的值，否则显示：var:str        |
+| ${var:+str} | 若var存在且不为空则返回str，否则返回空                   |
+| ${#var}     | 返回var的值的长度                                        |
+| ${var%str}  | 从var的尾部开始删除匹配str的最小部分                     |
+| ${var%%str} | 从var的尾部开始删除匹配str的最大部分                     |
+| ${var#str}  | 从var的头部开始删除匹配str的最小部分                     |
+| ${var##str} | 从var的头部开始删除匹配str的最大部分                     |
+
+#### 常用环境变量
+
+|            |                                              |
+| ---------- | -------------------------------------------- |
+| **$HOME**  | **用户的注册目录（用户主目录）；同～**       |
+| **$SHELL** | **设置用户的shell类型**                      |
+| **$USER**  | **保存当前的用户名**                         |
+| **$PATH**  | **定义查找命令的目录列表，目录名用冒号隔开** |
+| **$PWD**   | **保存用户当前在文件系统的位置**             |
+| **$PS1**   | **定义shell的主提示符**                      |
+| **$PS2**   | **定义shell的副提示符**                      |
+| **$IFS**   | **域内分隔符**                               |
 
 ### 字符串
 
@@ -113,7 +206,7 @@ echo "hello, $name \"hh\""
 
 运行结果如下图:
 
-![image-20220122011737849](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220122011737849.png)
+![image-20220122011737849](https://img-blog.csdnimg.cn/img_convert/a5482461648bfd4645f6803ad4542b71.png)
 
 ##### 获取字符串长度
 
@@ -339,11 +432,11 @@ echo `expr $a \| $b`  # 输出3
 - `-p`: 后面可以跟提示信息
 - `-t`: 后面跟秒数，定义输入字符的等待时间，超过等待时间后会自动忽略此命令
 
-![image-20220124105302895](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220124105302895.png)
+![image-20220124105302895](https://img-blog.csdnimg.cn/img_convert/bc046c44e90f30891f2247daffc46a45.png)
 
 这里`zsh`和`bash`的语法有一点差别，`zsh`想要输出提示语句时不需要`-p`参数:
 
-![image-20220124111419807](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220124111419807.png)
+![image-20220124111419807](https://img-blog.csdnimg.cn/img_convert/c25710e4581d3d0b112c9768d2dab93a.png)
 
 ?之后的所有内容都是提示字符，?前面的字符可以用于指定输入的变量名称。
 
@@ -386,7 +479,7 @@ echo "World"
 
 输出结果:
 
-![image-20220124112943201](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220124112943201.png)
+![image-20220124113306819](https://img-blog.csdnimg.cn/img_convert/205d87e42c075930f1ed22262495d6f1.png)
 
 #### 使echo输出后不换行
 
@@ -398,7 +491,7 @@ echo "World"
 
 输出结果:
 
-![image-20220124113158101](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220124113158101.png)
+![image-20220124113158101](https://img-blog.csdnimg.cn/img_convert/8670f6e65e70d721dec9abe63bda2419.png)
 
 如果没有-c:
 
@@ -410,7 +503,7 @@ echo "World"
 
 输出结果:
 
-![image-20220124113306819](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220124113306819.png)
+![image-20220124113306819](https://img-blog.csdnimg.cn/img_convert/205d87e42c075930f1ed22262495d6f1.png)
 
 #### 原样输出字符串
 
@@ -433,7 +526,7 @@ echo `date`
 
 输出结果:
 
-![image-20220124113535301](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220124113535301.png)
+![image-20220124113535301](https://img-blog.csdnimg.cn/img_convert/92799ef57bfd04814779b08e0e49b914.png)
 
 ### `printf`命令
 
@@ -490,7 +583,7 @@ test 2 -lt 3  # 为真，返回值为0
 echo $?  # 输出上个命令的返回值，输出0
 ```
 
-![image-20220201203126222](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220201203126222.png)
+![image-20220201203126222](https://img-blog.csdnimg.cn/img_convert/f4644abcada3b7d72f7271a0b8a556d6.png)
 
 `-lt`选项如图片中给出的一样。
 
@@ -509,6 +602,7 @@ test -e filename  # 判断文件是否存在
 | -e       | 文件是否存在 |
 | -f       | 是否为文件   |
 | -d       | 是否为目录   |
+| -L/h     | 符号连接文件 |
 
 ##### 文件权限判断
 
@@ -567,7 +661,7 @@ test -r filename -a -x filename
 
 这个语句可以通过`-a`以及`-o`来连接多个选项，实际测试中这两个选项的作用就相当于逻辑表达式中的"与"和"或"，test的返回值就是对用户给出的逻辑表达式进行求值。
 
-![image-20220201212804605](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220201212804605.png)
+![image-20220201212804605](https://img-blog.csdnimg.cn/img_convert/dff3894bd8a50a498acc0de366a704c7.png)
 
 #### 判断符号`[]`
 
@@ -580,7 +674,7 @@ test -r filename -a -x filename
 echo $?  # 输出上个命令的返回值，输出0
 ```
 
-![image-20220201214330583](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220201214330583.png)
+![image-20220201214330583](https://img-blog.csdnimg.cn/img_convert/d347741e6e7c2844106b4f71f2ce48e1.png)
 
 这里用到了`&&`短路的特性，才能使正确的`echo`语句得到执行
 
@@ -592,7 +686,7 @@ echo $?  # 输出上个命令的返回值，输出0
 
 例如:
 
-![image-20220201215645896](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220201215645896.png)
+![image-20220201215645896](https://img-blog.csdnimg.cn/img_convert/3f2717ce9a8e29ed7fbb83e798ae44a7.png)
 
 实测在`zsh`上判等需要用`=`, 而在`bash`上`==`和`=`都能实现判等的效果。
 
@@ -906,7 +1000,7 @@ func  # 执行函数
 
 输出结果:
 
-![image-20220209173726561](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220209173726561.png)
+![image-20220209173726561](https://img-blog.csdnimg.cn/img_convert/a1014b79ce84eba93298a1505e7f34a2.png)
 
 #### 获取`return`值和`stdout`值
 
@@ -931,7 +1025,7 @@ echo "return = $ret"
 
 输出结果
 
-![image-20220209173904366](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220209173904366.png)
+![image-20220209173904366](https://img-blog.csdnimg.cn/img_convert/ad5ce18be4da4067ab59212e1fe7f8a7.png)
 
 #### 函数的输入参数
 
@@ -971,11 +1065,11 @@ echo $(func 10)
 
 下面是输出结果，需要输入11个y。。。
 
-![image-20220209182256507](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220209182256507.png)
+![image-20220209182256507](https://img-blog.csdnimg.cn/img_convert/27cbd9ecd4fa5864faecd809f7eb95b0.png)
 
 代码我把网课的改了一下，把``word=""``这一句挪到了func外面，于是得到了下面这个结果:
 
-![image-20220209182700360](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220209182700360.png)
+![image-20220209182700360](https://img-blog.csdnimg.cn/img_convert/6835c3aa0b761b93a9ef3fa8a7e047df.png)
 
 ~~这看起来就正常多了哈哈~~
 
@@ -1067,5 +1161,5 @@ echo $name  # 使用test1.sh中的变量
 
 运行结果如下图
 
-![image-20220209195405590](https://cdn.jsdelivr.net/gh/JACK121385/img-bed/image-20220209195405590.png)
+![image-20220209195405590](https://img-blog.csdnimg.cn/img_convert/54cb15797c94f87accbcfc5ed9da204e.png)
 
