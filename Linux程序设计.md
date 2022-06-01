@@ -283,7 +283,7 @@ tar -xf archive.tar          # 展开归档文件 archive.tar 中的所有文件
   | 元字符     | 功能                           | 实例           | 与什么相匹配                                       |
   | ---------- | ------------------------------ | -------------- | -------------------------------------------------- |
   | **^**      | **行开头定位**                 | **^love**      | **与以love开头的行匹配**                           |
-  | **$**      | **行末尾定位**                 | **love$**      | **与以love结尾的行匹配**                           |
+  | **$**      | **行末尾定位**                |**love$**|**与以love结尾的行匹配**|
   | **.**      | **任意一个字符**               | **l..e**       | **与包含一个  l  后跟两字符，再跟一个e  的行匹配** |
   | *****      | **跟0或多个前驱字符相匹配**    | **/L*ove/**    | **跟  ove 前有0个或多个L 的行匹配**                |
   | **[ ]**    | **与其中的一个字符匹配**       | **/[Ll]ove/**  | **与包含love  或  Love  的行匹配**                 |
@@ -1894,3 +1894,530 @@ int main(){
   - 信号：不能称之为真正意义上的IPC，只是简单的事件通知，并不能完成数据传输
 
 ![image-20220531201427923](https://i0.hdslb.com/bfs/album/9374cf9162c738baa2ce9a0053b46f8f1796f8c6.png)
+
+**信号**
+
+- **信号是一种软中断**
+- **由一个进程发给另一个进程**
+- **进程的产生条件**
+  - **用户在终端按下一个组合键**
+  - 硬件异常
+  - **进程调用kill函数发送信号**
+  - 当检测到某软件异常时产生信号
+
+- 信号处理
+
+  - 忽略信号
+  - 捕获信号
+  - 执行默认动作
+
+- 常见信号
+
+  可使用 `kill -l` 查看
+
+  | 信号名  | 含义                                                         |
+  | ------- | ------------------------------------------------------------ |
+  | SIGINT  | 程序终止信号。当用户按下CRTL+C时通知前台进程组终止进程       |
+  | SIGKILL | 用来立即结束程序的运行，不能被阻塞、处理或忽略               |
+  | SIGTSTP | 在用户按下挂起键（Ctrl+z）时，系统发送此信号，会造成程序挂起 |
+  | SIGSTOP | 同上，但是不能被阻塞、处理或忽略                             |
+
+- **信号的生命周期**
+
+  - **从创建一个信号，并且一直保存，直到内核可以根据这个信号做出相应动作为止，然后引发这个动作**
+
+    ![image-20220601193632587](https://i0.hdslb.com/bfs/album/05f20d77e7f81ec2af8aec75517596c9468c14ca.png)
+
+- **发送信号**
+
+  ```c
+  #include<sys/types>
+  #include<signal.h>
+  int kill(pid_t pid, int sig);
+  /*
+  向指定进程发送sig信号
+  pid：>0，发送指定PID的进程
+  		=0，将信号发送给和目前进程所在进程组的所有进程
+    	-1，将信号广播给系统内所有进程
+    	<-1, 发送信号给PID为pid绝对值的进程
+  */
+  
+  #include<unistd.h>
+  int alarm(int second);
+  /*
+  设定一个定时器，在指定秒数后向进程自身发送一个SIGALRM信号，该信号默认处理是终止当前进程。
+  sescode：设置为0，则取消所有闹钟；否则覆盖前一个闹钟并返回剩余秒数。
+  函数返回0或剩余的秒数
+  */
+  
+  int puase(void);
+  //挂起进程，知道有进程到达
+  
+  int sleep(int sec);
+  //挂起进程，知道金浩到达或过去sec秒，
+  //返回剩余秒数
+  
+  #include<unsitd.h>
+  #include<signal.h>
+  int raise(int sig);
+  /*
+  向自己发信号
+  等价于 kill(getpid(), sig)
+  */
+  ```
+
+- **信号的捕获与处理**
+
+  ```c
+  #include<signal.h>
+  sighandler_t signal(int signum,sighandler_t handler);
+  /*
+  向内核注册指定信号的处理
+  signum：待捕获或忽略的信号；
+  handler：捕获信号后由系统回调的函数；可以设为一下特殊值：
+  	SIG_IGN：忽略信号
+  	SIG_DEL：恢复默认行为
+  返回值：成功时返回原定义信号处理函数，失败返回：SIG_ERR
+  */
+  ```
+
+  - 定义处理函数
+  - 使用signal处理
+  - 使用完后，恢复默认处理 `signal(signum, SIG_DFL)`
+
+- **信号阻塞**
+
+  ```c
+  #include<signal.h>
+  int sigprocmask(int how,sigset_t *set,sigset_t *oldset);
+  /*
+  设置或查询阻塞信号集
+  how：
+  	SIG_BLOCK：将set中的信号添加到阻塞信号集
+  	SIG_UNBLOCK：将set中的信号从阻塞信号集中删除
+  	SIG_MASK：将set信号集设置为阻塞信号集
+  set：新的信号集，若为NULL则忽略how，只是将原信号集保存到oldset
+  oldset：保存原信号集
+  */
+  
+  int sigemptyset(sigset_t *set);
+  //清空信号量集
+  
+  int	 sigfillset(sigset_t *set);
+  //初始化信号集，并用系统所有有效信号填充到信号集
+  
+  int sigaddset(sigset_t *set, int signo);
+  int sigdelset(sigset_t *set, int signo);
+  //将指定信号添加到信号集或从信号集删除
+  
+  int sigismember(sigset_t *set int signo);
+  //判断指定信号是否包含在信号集中，包含返回1，不包含返回0，失败返回-1
+  ```
+
+- **示例**
+
+  ```c
+  #include<stdio.h>
+  #include<stdlib.h>
+  #include<unistd.h>
+  #include<signal.h>
+  void sig_handler(int num)
+  {
+      printf("receive the signal %d.\n", num);
+      raise(SIGCONT);
+      signal(SIGALRM,SIG_DFL);
+  }
+  
+  int main(){
+  
+      signal(SIGALRM, sig_handler);
+      alarm(2);
+      pause();
+      printf("pause is over.\n");
+     exit(0);
+  }
+  
+  #include<stdio.h>
+  #include<stdlib.h>
+  #include<signal.h>
+  
+  void handle(int signo){
+          int i;
+          printf("signal %d is captured....\n",signo);
+  
+          for(i = 0;i<5;i++){
+                  puts("signal is blocked (in signal processing)...");
+                  sleep(1);
+          }
+  }
+  
+  int main(){
+          struct sigaction action;
+  
+          action.sa_handler = handle;
+          action.sa_flags = SA_NODEFER;
+          sigemptyset(&action.sa_mask);
+  
+          sigaction(SIGINT,&action,NULL);
+  
+                  puts("Hi.....");
+                  sleep(5);
+  
+          return 0;
+  }
+  ```
+
+  
+
+**管道**
+
+- **特点**
+
+  - **管道是半双工的，数据只能向一个方向流动**
+
+  - **需要双方通信时，需要建立起两个管道**
+
+  - **普通管道只能用于父子进程或者兄弟进程之间（具有亲缘关系的进程）**
+
+  - **命名管道，又称为FIFO队列，借助于外存解除普通管道只能在同源进程使用的限制**
+
+- **无名管道**
+
+  <img src="https://i0.hdslb.com/bfs/album/e4b397dc3ea21d6a3f70f5be3a5735bf2fe10993.png" alt="image-20220601195902378" style="zoom:80%;" />
+
+  ```c
+  #include<unistd.h>
+  int pipe(int fd[2]);
+  /*
+  创建管道同时创建两个文件描述符，其中fds[0]已读打开，fds[1]以写打开。
+  成功返回0，失败返回-1
+  */
+  
+  #include<stdio.h>
+  FILE *popen(char *cmd, char *type);
+  /*
+  创建一个管道，并fork一个子进程，关闭管道不使用端，在子进程中exec一个shell并执行指定命令，然后等待命令终止。
+  cmd：命令
+  type：打开方式：r或w
+  返回值：成功返回一个文件流指针，失败返回NULL
+  */
+  
+  int pclose(FILE *stream);
+  //关闭popen打开的文件流
+  
+  ```
+
+- 使用无名管道进行通信的步骤如下：
+  1. 创建所需的管道
+  2. 生成(多个)子进程
+  3. 关闭/复制文件描述符,使之与相应的管道末端相联系
+  4. 关闭不需要的管道末端
+  5. 进行通信活动
+  6. 关闭所有剩余的打开文件描述符
+
+- **示例**
+
+  ```c
+  #include<stdio.h>
+  #include<unistd.h>
+  #include<stdlib.h>
+  #include<sys/types.h>
+  #include<sys/wait.h>
+  #include<string.h>
+  int main()
+  {
+          pid_t result;
+          int r_num;
+          int pipe_fd[2];
+          char buf_w[1000], buf_r[1000];
+          if(pipe(pipe_fd) < 0){                  //创建管道
+                  perror("管道创建失败\n");
+                  exit(1);
+          }
+          result = fork();
+          if(result < 0){
+                  perror("进程创建失败\n");
+                  exit(1);
+          }
+          if(result == 0){ //子进程
+                  close(pipe_fd[1]);
+                  close(0);
+                  dup(pipe_fd[0]);
+                  execlp("grep", "grep", "1.c", NULL);
+                  close(pipe_fd[0]);
+          }
+          else{                   //父进程
+                  close(pipe_fd[0]);
+                  close(1);
+                  dup(pipe_fd[1]);
+                  execlp("ls", "ls", "-l", NULL);
+                  close(pipe_fd[1]);
+          }
+          return 0;
+  }
+  
+  #include<stdio.h>
+  #include<stdlib.h>
+  
+  int main(){
+          FILE *fin,*fout;
+          char line[256];
+  
+          fin = popen("ls -l","r");
+          fout = popen("grep ^d","w");
+  
+          while(fgets(line, 256, fin) != NULL){
+                  fputs(line,fout);
+          }
+  
+          pclose(fin);
+          pclose(fout);
+          return 0;
+  }
+  ```
+
+
+
+**命名管道——FIFO**
+
+```c
+#include<sys/types.h>
+#include<sys/stat.h>
+int mkfifo(char *pname, mode_t mode);
+/*
+创建一个命名管道：
+	pname：路径
+	mode：新建管道文件的权限
+	成功返回0，失败返回-1
+*/
+
+#include<unistd.h>
+#include<fcntl.h>
+int mknod(const char *pname, mode_t mode, dev_t dev);
+/*
+创建一个特殊文件
+	pname：路径
+	mode：新建管道文件的权限
+	dev_t：文件类型，S_IFREG, S_IFCHR, S_IFBLK, S_IFIFO or S_IFSOCK
+*/
+```
+
+- **编程步骤**
+  1. 使用mkfifo或mkmod创建管道文件
+  2. 以只读或以只写方式打开（open）管道文件
+  3. 以read读取或write写管道
+  4. 关闭管道文件
+
+​	**注：默认管道的读写是阻塞的，而且只有两端都打开后才能进行读写**
+
+- **示例**
+
+```c
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+
+const char *fifopath = "/tmp/myfifo";
+
+//write
+int main(){
+        int fifo;
+        int fd;
+
+        char buf[80];
+        int cnt;
+
+        if(access(fifopath,F_OK) != 0){
+                fifo = mkfifo(fifopath,0660);
+                if(fifo < 0){
+                        perror("fifo creat fail...");
+                        exit(1);
+                }
+        }
+
+        fd = open(fifopath,O_WRONLY);
+        if(fd < 0 ){
+                perror("open fail...");
+                exit(2);
+        }
+        cnt = read(0,buf,80);
+        while(cnt > 1){
+                write(fd,buf,cnt);
+                cnt = read(0,buf,80);
+        }
+
+        close(fd);
+        exit(0);
+}
+
+//read
+int main(){
+        int fd;
+        int cnt;
+        char buf[80];
+
+        if(access(fifopath,F_OK)  == -1){
+                perror("fifo file is not exist...");
+                exit(1);
+        }
+
+        fd = open(fifopath,O_RDONLY);
+        if(fd < 0){
+                perror("open fifo fail...");
+                exit(2);
+        }
+
+        cnt = read(fd,buf,80);
+        while(cnt > 0){
+                write(0,buf,cnt);
+                cnt = read(fd,buf,80);
+        }
+
+        close(fd);
+
+        return 0;
+}
+```
+
+
+
+**消息队列**
+
+- **提供了一种从一个进程向另一个进程发送一个数据块的方法**
+
+- **消息队列是链表队列，它通过内核提供一个struct msqid_ds \*msgque[MSGMNI]向量维护内核的一个消息队列列表**
+
+- **使用key唯一确定消息队列**
+
+- **编程方法**
+
+  ```c
+  #include<sys/types.h>
+  #include<sys/ipc.h>
+  #include<sys/msg.h>
+  key_t	ftok(char path,int proj_id);
+  /*
+  创建一个key
+  	path：指定一个路径，在不同的进程中通过约定的path确保可产生相同的msgid。
+  	proj_id：一个序数，取值在0-127之间。
+  */
+  
+  int msgget(key_t mkey, int msgflg);
+  /*
+  创建、打开一个消息队列
+  key：消息队列ID，若key为IPC_PRIVATE，创建新的消息队列
+  msgflg：
+  	IPC_CREAT：若消息队列不存在则创建
+  	IPC_EXCL：和IPC_CREAT配合使用，若消息队列存在则失败。
+  	同时指定权限：IPC_CREAT|0666
+  */
+  
+  int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+  /*
+  把指定消息插入到指定的消息队列中
+  msqid：消息队列ID
+  msgp：消息体，应该是一个结构体指针
+  msgsz：发送消息的大小
+  msgflg：0或IPC_NOWAIT，0：若队列满则被阻塞；IPC_NOWAIT若队列满在立即返回错误。
+  返回值：成功为0，失败为-1。
+  */
+  
+  //消息体
+  struct msg{
+    long	mtype; //消息类型，固定项，必须大于0,用来指定具体
+  	···	//自定义项
+  }
+  
+  ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+  /*
+  从指定消息队列中接收消息
+  msqid：消息队列ID
+  msgp：消息体，应该是一个结构体指针
+  msgsz：接收消息的大小
+  msgtyp：接收那条消息，0：队列第一条消息；绝对值>0：接收|msgtype|与msgp的mtype相同的消息
+  msgflg：0:若没有消息则阻塞；IPC_NOWAIT：若没有消息则立即返回错误。
+  */
+  
+  int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+  /*
+  msqid：消息队列ID
+  cmd：指定操作
+  	IPC_RMID：删除指定的消息队列，buf指定为NULL
+  	IPC_STAT：将内核中的消息结构复制到用户空间中的buf中
+  	IPC_SET：设置消息队列的有效UID和GID、操作权限等。
+  */
+  ```
+
+- **示例**
+
+```c
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/types.h>
+#include<sys/msg.h>
+#include<sys/ipc.h>
+#include<unistd.h>
+#include<string.h>
+
+struct msgmbuf{         //消息结构体
+        long mtype;
+        char msg_text[512];
+};
+
+int main()
+{
+        char name[100];
+        printf("请输入你的姓名：");
+        scanf("%s", name);
+        int s = strlen(name);
+        name[s] = ' ';
+        name[s+1] = ':';
+        name[s+2] = ' ';
+        int qid;
+        key_t key;
+        int len;
+        struct msgmbuf msg;
+        msg.mtype = 1;
+        pid_t pid;
+        if((key = ftok(".", 'a')) == -1)
+        {
+                perror("产生标准key出错\n");
+                exit(1);
+        }
+        if((qid = msgget(key, IPC_CREAT | 0666)) == -1){
+                perror("创建消息队列出错\n");
+                exit(1);
+        }
+        printf("创建、打开的队列号是：%d\n", qid);
+        pid = fork();
+        if(pid < 0) {
+                perror("进程创建失败\n");
+                exit(0);
+        }
+        if(pid == 0) {          //子进程，监听
+                while(1){
+                        //只能接受mtype=2的消息
+                        msgrcv(qid, &msg, 512, 2, 0);
+                        printf("%s\n",(&msg)->msg_text);
+                        memset((&msg)->msg_text, 0, strlen((&msg)->msg_text));
+                }
+        }
+        else{                           //父进程，用来发送消息
+                while(1){
+                        char str[512];
+                        scanf("%s", str);
+                        strcpy((&msg)->msg_text, name);
+                        strcat((&msg)->msg_text, str);
+                        len = strlen(msg.msg_text);
+                        msgsnd(qid, &msg, len, 0);
+                        printf("%s\n",(&msg)->msg_text);
+                }
+        }
+}
+```
+
+
+
