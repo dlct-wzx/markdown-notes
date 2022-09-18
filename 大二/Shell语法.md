@@ -858,6 +858,17 @@ do
 done
 ```
 
+实列5，不添加in。默认输出$1 - $$(\$#)
+
+```shell
+for var
+do 
+	echo $var
+done
+```
+
+
+
 #### `for((...;...;...))do...done`
 
 命令格式
