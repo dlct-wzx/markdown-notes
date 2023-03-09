@@ -36,11 +36,11 @@ id1[科学推理] --> 归纳induction --> 从特殊到一般 --> 自底向上搜
 id1 --> 演绎deduxtion --> 从一般到特殊 --> 自顶向下搜索
 ```
 
-西瓜的**假设空间**如下：![西瓜的假设空间](机器学习（Machine Learning）.assets/西瓜的假设空间.png)
+西瓜的**假设空间**如下：![西瓜的假设空间](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E8%A5%BF%E7%93%9C%E7%9A%84%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4.png)
 
 在学习过程中，可能有多个假设与训练集一致，即存在一个与训练集一致的 **假设集合**，我们称之为 **版本空间(version space)**，例如，在西瓜问题中，与训练集对应的 **版本空间**如图：
 
-![西瓜的版本空间](机器学习（Machine Learning）.assets/西瓜的版本空间.png)
+![西瓜的版本空间](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E8%A5%BF%E7%93%9C%E7%9A%84%E7%89%88%E6%9C%AC%E7%A9%BA%E9%97%B4.png)
 
 ### 1.4 归纳偏好
 
@@ -63,7 +63,7 @@ id1 --> 演绎deduxtion --> 从一般到特殊 --> 自顶向下搜索
 
 **下列是一个过拟合与欠拟合的例子**
 
-![过拟合与欠拟合](机器学习（Machine Learning）.assets/过拟合与欠拟合.png)
+![过拟合与欠拟合](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AC%A0%E6%8B%9F%E5%90%88.png)
 
 ### 2.2 评估方法
 
@@ -81,7 +81,7 @@ id1 --> 演绎deduxtion --> 从一般到特殊 --> 自顶向下搜索
 
    先将数据集 $D$ 划分为k个大小相似的互斥子集，即 $D=D_{1} \bigcup D_{2}\bigcup\cdots \bigcup D_{k},D_{i}\bigcap  D_{j}=\oslash (i\ne j) $ .每个子集 $D_{i}$ 都尽可能保持数据分布的一致性，即从 $D$ 中通过分层采样得到。然后每次用 $k-1$ 个子集的并集作为训练集，余下的那个子集作为测试集。于是可以进行 $k$ 次训练和测试，结果的稳定性与包真性与 $k$ 有关，所以又称 **k折交叉验证（ $k$​ -flold crossvalidation）**
 
-   ![交叉验证示意图](机器学习（Machine Learning）.assets/交叉验证示意图.png)
+   ![交叉验证示意图](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81%E7%A4%BA%E6%84%8F%E5%9B%BE.png)
 
 3.**自助法（bootstrapping）**
 
@@ -158,11 +158,11 @@ $$
 
    对于二分问题，可将样例根据其真实类别与学习器预测类别的组合划分为**真正例(true positive)**、**假正例(false positive)**、**真反例(true negative)**、**假反例(false negative)**四种情形，令$TP、FP、TN、EN$分别表示其对应的 样例数，则显然有$TP + FP + TN + FN =样例总数$.分类结果的**混淆矩阵(confusion matrix)**如下所示：
 
-   ![分类结果的混淆矩阵](机器学习（Machine Learning）.assets/分类结果的混淆矩阵.png)
+   ![分类结果的混淆矩阵](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E5%88%86%E7%B1%BB%E7%BB%93%E6%9E%9C%E7%9A%84%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5.png)
 
     **查准率** 和 **查全率** 是一对矛盾的量度。一般来说，查准率高时，查全率往往偏低；二查全率搞事，查准率往往偏低。以 **查准率** 为纵轴、**查全率** 为横轴作图，就得到 了 **查准率-查全率曲线**，简称 **P-R曲线**，显示该曲线的图称为 **P-R图**
 
-![P-R图](机器学习（Machine Learning）.assets/P-R图.png)
+![P-R图](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/P-R%E5%9B%BE.png)
 
 ​		**P-R图** 直观地显示出学习器在样本总体上的查全率、查准率。若一个学习器的 **P-R图** 完全被另一		个学习器完全 **包住**，则可以断言后者性能强于前者，如上图，**A的性能强于B**。但是，如果二者 		**P-R图有交叉** 则难以分辨。因此人们设计了一些综合考虑 **查准率、查全率** 的性能量度;
 
@@ -200,7 +200,7 @@ $$
    TPR=\frac{TP}{TP+FN}\qquad (2.19)
    $$
 
-   ![ROC图](机器学习（Machine Learning）.assets/ROC图.png)
+   ![ROC图](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/ROC%E5%9B%BE.png)
 
    (a)图为所有正例排在所有反例之前的 ”理想模型“ ，现实中通常是利用有限个测试样例来绘制 **ROC图** ，此时无法产生类似(a)的平滑图像，只能产生(b)这样的曲线。
 
@@ -208,7 +208,7 @@ $$
    $$
    AUC=\frac{1}{2} \sum_{m-1}^{i=1} (x_{i+1}-x_{i})\bullet (y_{i}+y_{i+1})\qquad (2.20)
    $$
-   ![AUC损失](机器学习（Machine Learning）.assets/AUC损失.png)
+   ![AUC损失](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/AUC%E6%8D%9F%E5%A4%B1.png)
 
 4. **代价敏感错误率与代价曲线**
 
@@ -216,7 +216,7 @@ $$
 
    以二分任务举例，设定一个 **代价矩阵（cost martrix）**，对 $cost_{01}$ 与 $cost_{10}$​​​ 分别赋值代表损失的代价,取值为$[0,1]$
 
-![代价矩阵](机器学习（Machine Learning）.assets/代价矩阵.png)
+![代价矩阵](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E4%BB%A3%E4%BB%B7%E7%9F%A9%E9%98%B5.png)
 
 ​		例如上式，若将第0类作为正类，第1类作为反类，令 $D^+$ 与 $D^-$ 分别代表样例 $D$​ 的正例子集		与反例子集，则 **代价敏感（cost-sensitive）错误率** 为：
 $$
@@ -225,11 +225,11 @@ E(f ; D ; \text { cost })=& \frac{1}{m}\left(\sum_{\boldsymbol{x}_{i} \in D^{+}}
 &\left.+\sum_{\boldsymbol{x}_{i} \in D^{-}} \mathbb{I}\left(f\left(\boldsymbol{x}_{i}\right) \neq y_{i}\right) \times \operatorname{cost}_{10}\right)
 \end{aligned}
 $$
-​		![代价曲线](机器学习（Machine Learning）.assets/代价曲线.png)
+​		![代价曲线](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E4%BB%A3%E4%BB%B7%E6%9B%B2%E7%BA%BF.png)
 
 其中 $FPR$​ 是式 $(2.19)$ 定义的假正例率，$FNR=1-TPR$ 为假反例率。代价曲线的绘制很简单：**ROC曲线** 上的每一点对应了代价平面上的一条线段，将**ROC曲线** 上的每一点转化为代价平面上的一条线段，然后取所有线段的下界，围成的面积就是期望总体代价：
 
-![期望总体代价曲线](机器学习（Machine Learning）.assets/期望总体代价曲线.png)
+![期望总体代价曲线](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E6%9C%9F%E6%9C%9B%E6%80%BB%E4%BD%93%E4%BB%A3%E4%BB%B7%E6%9B%B2%E7%BA%BF.png)
 
 
 
@@ -249,41 +249,9 @@ $$
    
    泛化错误率为 $\epsilon $  的学习器被测定测试错误率为 $\hat{\epsilon } $​ 的概率为：
    
-   ![泛化错误率](机器学习（Machine Learning）.assets/泛化错误率.png)
+   ![泛化错误率](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E6%B3%9B%E5%8C%96%E9%94%99%E8%AF%AF%E7%8E%87.png)
    
    该概率分布符合 **二项分布(binomial)** ，
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -293,7 +261,7 @@ $$
 
 ​	给定有 $d$ 个属性描述的示例 $x=(x_1;x_2;...;x_d)$ 其中 $x_i$ 是 $x$ 在第 $i$ 个属性上的取值，**线性模型（linear model）** 试图学得一个通过属性的线性组合来进行预测的函数，即
 
-![线性模型的一般形式](机器学习（Machine Learning）.assets/线性模型的一般形式-16272688597121.png)
+![线性模型的一般形式](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%B8%80%E8%88%AC%E5%BD%A2%E5%BC%8F-16272688597121.png)
 
 其中 $w=(w_1;w_2;...;w_d)$ .$w$ 与 $d$​ 学得后，模型就得以确认​。
 
@@ -307,13 +275,13 @@ $$
 
 **线性回归试图学得：**  
 
-![线性回归试图学得的方程](机器学习（Machine Learning）.assets/线性回归试图学得的方程.png)
+![线性回归试图学得的方程](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E8%AF%95%E5%9B%BE%E5%AD%A6%E5%BE%97%E7%9A%84%E6%96%B9%E7%A8%8B.png)
 
 ​	基于均方误差最小化来进行模型求解的方法称为 **最小二乘法（least square method）** 
 
 ​	经过计算我们可以得到 $w$ 和 $b$ 最优解的 **闭式（closed-form）** 解
 
-![w的解](机器学习（Machine Learning）.assets/w的解.png)
+![w的解](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/w%E7%9A%84%E8%A7%A3.png)
 
 ![b的解](机器学习（Machine Learning）.assets/b的解.png)
 
@@ -331,7 +299,7 @@ $$
 $$
 w^Tx_i=w_1*x_{i1}+w_2*x_{i2}+···+w_d*x_{id}
 $$
-![向量形式的数据集D](机器学习（Machine Learning）.assets/向量形式的数据集D.png)
+![向量形式的数据集D](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E5%90%91%E9%87%8F%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86D.png)
 
 相当于将 $x$ 和 $y$ 都变成向量形式，向量 $x_i$ 与向量 $y$ 都有 $d$ 个维度
 
@@ -343,7 +311,7 @@ $$
 
 最终学得的多元线性回归模型为
 
-![多元线性回归模型](机器学习（Machine Learning）.assets/多元线性回归模型.png)
+![多元线性回归模型](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B.png)
 
 2. 显示任务中$X^TX$ 往往不是 **满秩矩形** ，这时可能会产生多个 $\hat{w}$ 使得均方误差最小，这时一般引入 **正则化（regularization）** ，令：
    $$
@@ -373,7 +341,7 @@ $$
 
 1. **单位阶跃函数（unit-step function）**
 
-![单位阶跃函数](机器学习（Machine Learning）.assets/单位阶跃函数.png)
+![单位阶跃函数](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E5%8D%95%E4%BD%8D%E9%98%B6%E8%B7%83%E5%87%BD%E6%95%B0.png)
 
 ​										         	**图 3.2** 单位阶跃函数与对数几率函数	
 
@@ -383,13 +351,13 @@ $$
 
    **单位阶跃函数** 并不连续，不能直接用。所以这时，需要找到能在一定程度上近似 **单位阶跃函数** 的 **替代函数（surrogate function）** 。**对数几率函数** 就是一个常用的 **替代函数**：
 
-   ![对数几率函数](机器学习（Machine Learning）.assets/对数几率函数.png)
+   ![对数几率函数](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E5%AF%B9%E6%95%B0%E5%87%A0%E7%8E%87%E5%87%BD%E6%95%B0.png)
 
    如 **图 3.2** 的黑线所示
 
    将 $z=w^Tx+b$ 带入上式得：
 
-   ![对数几率](机器学习（Machine Learning）.assets/对数几率.png)
+   ![对数几率](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/%E5%AF%B9%E6%95%B0%E5%87%A0%E7%8E%87.png)
 
    从此可以看出， **式（3.18）** 实际上是在用 **线性回归模型** 的预测结果去笔记真实标记的对数几率，一次，对应的模型称为 **对数几率回归（logistic regression）**。虽然称为回归，但还是一种分类学习方法。其优点为：
 
@@ -406,5 +374,5 @@ $$
 1. 给定训练样例集，设法将样例投影到一条直线上，使得同类样例的投影点尽可能的接近、异类样例投影点尽可能远离
 2. 对新样本进行分类时，将其投影到同样的这条直线上，再根据投影点的位置来确定新样本的类别
 
-![LDA二维示意图](机器学习（Machine Learning）.assets/LDA二维示意图.png)
+![LDA二维示意图](https://picogo-1314393134.cos.ap-nanjing.myqcloud.com/markdown/LDA%E4%BA%8C%E7%BB%B4%E7%A4%BA%E6%84%8F%E5%9B%BE.png)
 
